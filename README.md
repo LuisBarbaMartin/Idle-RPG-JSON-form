@@ -2,6 +2,8 @@
 
 A small React + Vite tool for building character JSON for the idle RPG data files.
 
+Basics in case I forget:
+
 ## Run Locally
 
 Install dependencies once:
@@ -16,7 +18,6 @@ Start the development server:
 npm run dev
 ```
 
-Vite will print the local URL, usually `http://127.0.0.1:5173/`.
 
 ## Where To Edit
 
