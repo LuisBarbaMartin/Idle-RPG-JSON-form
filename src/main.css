@@ -1,18 +1,26 @@
-* {
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=SUSE:ital,wght@0,100..900;1,100..900&display=swap");
+@import "./styles/variables.css";
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f7f4ee;
-  color: #241b15;
+  font-family: "Inter";
+  background: var(--background);
+  color: var(--text);
 }
 
-button,
-input,
-select {
-  font: inherit;
+h1,
+h2,
+label,
+button {
+  font-family: "SUSE";
+  font-weight: 800;
 }
 
 button {
@@ -22,17 +30,6 @@ button {
 button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
-}
-
-.app-shell {
-  width: min(48rem, calc(100% - 2rem));
-  margin: 0 auto;
-  padding: 2rem 0;
-}
-
-h1,
-h2 {
-  margin-top: 0;
 }
 
 #character-form {
@@ -59,10 +56,10 @@ h2 {
 input,
 select {
   min-height: 2rem;
-  border: 1px solid #a99a8c;
+  border: 1px solid var(--secondary);
   border-radius: 0.25rem;
   padding: 0.25rem 0.5rem;
-  background: #fff;
+  background: var(--input-bg);
 }
 
 .level-row input {
@@ -102,11 +99,11 @@ select {
 #character-form > button,
 .preview-section button {
   min-height: 2rem;
-  border: 1px solid #6f5b48;
+  border: 1px solid var(--primary);
   border-radius: 0.25rem;
   padding: 0.25rem 0.65rem;
-  background: #efe4d4;
-  color: #241b15;
+  background: var(--accent60);
+  color: var(--text);
 }
 
 .stat-buttons button {
@@ -127,22 +124,24 @@ select {
   align-items: center;
   gap: 0.4rem;
   padding: 0.35rem 0.6rem;
-  border: 1px solid #8b4513;
+  border: 1px solid var(--secondary);
   border-radius: 999px;
-  background-color: #f5f5dc;
-  color: #3b2415;
+  background-color: var(--accent60);
+  color: var(--text);
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .remove-trait-button {
   border: none;
   background: transparent;
-  color: #8b0000;
-  font-weight: bold;
+  color: var(--alert);
+  font-weight: 800;
   cursor: pointer;
 }
 
 .remove-trait-button:hover {
-  color: #ff0000;
+  color: var(--alert-active);
 }
 
 .preview-section {
@@ -152,10 +151,10 @@ select {
 #json-preview {
   min-height: 8rem;
   overflow: auto;
-  border: 1px solid #d5c8b9;
+  border: 1px solid var(--primary);
   border-radius: 0.25rem;
   padding: 1rem;
-  background: #fff;
+  background: var(--input-bg);
 }
 
 @media (max-width: 36rem) {

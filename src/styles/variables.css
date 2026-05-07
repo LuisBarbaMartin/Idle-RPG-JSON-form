@@ -1,0 +1,27 @@
+
+
+
+:root {
+  --text: #191c17;
+  --background: #f7f8f7;
+  --primary: #475742;
+  --secondary: #a3b99d;
+  --accent: #729966;
+  --accent60: #72996699;
+  --input-bg: #ffffffad;
+
+  --alert: #8b0000;
+  --alert-active: #ff0000;
+   /* placeholders */
+  --caution: #ff0000;
+  
+}
+:root[data-theme="dark"] {
+  --text: #e5e8e3;
+  --background: #070807;
+  --primary: #adbda8;
+  --secondary: #4c6246;
+  --accent: #729966;
+  --accent80: #729966cc;
+  --input-bg: #000;
+}

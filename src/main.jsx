@@ -1,6 +1,6 @@
 import { StrictMode, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import "../style.css";
+import "./main.css";
 
 const jobs = [
   { value: "fighter", label: "Fighter" },
@@ -9,7 +9,7 @@ const jobs = [
   { value: "wizard", label: "Wizard" },
   { value: "cleric", label: "Cleric" },
   { value: "ranger", label: "Ranger" },
-  { value: "thief", label: "Thief" }
+  { value: "thief", label: "Thief" },
 ];
 
 const traits = [
@@ -17,7 +17,7 @@ const traits = [
   { value: "clever", label: "Clever" },
   { value: "reckless", label: "Reckless" },
   { value: "loyal", label: "Loyal" },
-  { value: "greedy", label: "Greedy" }
+  { value: "greedy", label: "Greedy" },
 ];
 
 const statNames = ["strength", "intelligence", "agility", "wisdom"];
@@ -26,7 +26,7 @@ const minimumStats = {
   strength: 3,
   intelligence: 3,
   agility: 3,
-  wisdom: 3
+  wisdom: 3,
 };
 
 function getPointsPerLevel(level) {
@@ -52,7 +52,11 @@ function createInitialStats() {
 
 function createCharacterId(name, job) {
   const jobPart = job || "character";
-  const namePart = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  const namePart = name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "");
 
   return namePart ? `${jobPart}_${namePart}` : jobPart;
 }
@@ -67,11 +71,14 @@ function App() {
   const [selectedTraits, setSelectedTraits] = useState([]);
   const [generatedJson, setGeneratedJson] = useState("");
 
-  const selectedTraitValues = useMemo(function () {
-    return selectedTraits.map(function (trait) {
-      return trait.value;
-    });
-  }, [selectedTraits]);
+  const selectedTraitValues = useMemo(
+    function () {
+      return selectedTraits.map(function (trait) {
+        return trait.value;
+      });
+    },
+    [selectedTraits],
+  );
 
   function handleLevelChange(event) {
     const nextLevel = Number(event.target.value);
@@ -95,7 +102,7 @@ function App() {
     setStats(function (currentStats) {
       return {
         ...currentStats,
-        [statName]: currentStats[statName] + 1
+        [statName]: currentStats[statName] + 1,
       };
     });
     setAvailableStatPoints(function (currentPoints) {
@@ -111,7 +118,7 @@ function App() {
     setStats(function (currentStats) {
       return {
         ...currentStats,
-        [statName]: currentStats[statName] - 1
+        [statName]: currentStats[statName] - 1,
       };
     });
     setAvailableStatPoints(function (currentPoints) {
@@ -128,9 +135,11 @@ function App() {
       return;
     }
 
-    if (selectedTraits.some(function (trait) {
-      return trait.value === traitToAdd.value;
-    })) {
+    if (
+      selectedTraits.some(function (trait) {
+        return trait.value === traitToAdd.value;
+      })
+    ) {
       return;
     }
 
@@ -162,8 +171,8 @@ function App() {
         base_agility: stats.agility,
         base_wisdom: stats.wisdom,
         level: Number(level),
-        traits: selectedTraitValues
-      }
+        traits: selectedTraitValues,
+      },
     };
 
     return JSON.stringify(character, null, 2);
@@ -214,8 +223,7 @@ function App() {
             onChange={function (event) {
               setJob(event.target.value);
             }}
-            required
-          >
+            required>
             <option value="">Select a job</option>
             {jobs.map(function (jobOption) {
               return (
@@ -229,16 +237,7 @@ function App() {
 
         <div className="level-row">
           <label htmlFor="character-level">Level:</label>
-          <input
-            id="character-level"
-            name="level"
-            type="number"
-            min="1"
-            max="100"
-            value={level}
-            onChange={handleLevelChange}
-            required
-          />
+          <input id="character-level" name="level" type="number" min="1" max="100" value={level} onChange={handleLevelChange} required />
 
           <p>
             Available Stat Points: <strong>{availableStatPoints}</strong>
@@ -249,26 +248,22 @@ function App() {
           {statNames.map(function (statName) {
             return (
               <div className="stat-control" key={statName}>
-                <label htmlFor={`character-${statName}`}>
-                  {statName.charAt(0).toUpperCase() + statName.slice(1)}
-                </label>
+                <label htmlFor={`character-${statName}`}>{statName.charAt(0).toUpperCase() + statName.slice(1)}</label>
 
                 <div className="stat-buttons">
-                  <button type="button" onClick={function () {
-                    decreaseStat(statName);
-                  }}>
+                  <button
+                    type="button"
+                    onClick={function () {
+                      decreaseStat(statName);
+                    }}>
                     -
                   </button>
-                  <input
-                    id={`character-${statName}`}
-                    name={statName}
-                    type="number"
-                    value={stats[statName]}
-                    readOnly
-                  />
-                  <button type="button" onClick={function () {
-                    increaseStat(statName);
-                  }}>
+                  <input id={`character-${statName}`} name={statName} type="number" value={stats[statName]} readOnly />
+                  <button
+                    type="button"
+                    onClick={function () {
+                      increaseStat(statName);
+                    }}>
                     +
                   </button>
                 </div>
@@ -285,8 +280,7 @@ function App() {
             value={traitSelectValue}
             onChange={function (event) {
               setTraitSelectValue(event.target.value);
-            }}
-          >
+            }}>
             <option value="">Choose a trait</option>
             {traits.map(function (trait) {
               return (
@@ -297,7 +291,9 @@ function App() {
             })}
           </select>
 
-          <button type="button" onClick={addTrait}>Add Trait</button>
+          <button type="button" onClick={addTrait}>
+            Add Trait
+          </button>
         </div>
 
         <div id="selected-traits-container">
@@ -311,8 +307,7 @@ function App() {
                   onClick={function () {
                     removeTrait(trait.value);
                   }}
-                  aria-label={`Remove ${trait.label}`}
-                >
+                  aria-label={`Remove ${trait.label}`}>
                   x
                 </button>
               </span>
@@ -338,5 +333,5 @@ function App() {
 createRoot(document.querySelector("#root")).render(
   <StrictMode>
     <App />
-  </StrictMode>
+  </StrictMode>,
 );
