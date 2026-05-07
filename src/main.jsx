@@ -91,8 +91,6 @@ function App() {
   const [generatedJson, setGeneratedJson] = useState("");
   const [uploadedJson, setUploadedJson] = useState(null);
   const [uploadError, setUploadError] = useState("");
-  const [uploadedJson, setUploadedJson] = useState(null);
-  const [uploadError, setUploadError] = useState("");
 
   const selectedTraitValues = useMemo(
     function () {
@@ -363,16 +361,7 @@ function App() {
         </div>
         {uploadedJson && <p className="form-note">JSON loaded. Generated characters will be appended to it.</p>}
         {uploadError && <p className="form-error">{uploadError}</p>}
-
-        <div className="form-field">
-          <label htmlFor="json-upload">Upload JSON:</label>
-          <input
-            id="json-upload"
-            type="file"
-            accept=".json,application/json"
-            onChange={handleJsonUpload}
-          />
-        </div>
+        
         {uploadedJson && <p className="form-note">JSON loaded. Generated characters will be appended to it.</p>}
         {uploadError && <p className="form-error">{uploadError}</p>}
 

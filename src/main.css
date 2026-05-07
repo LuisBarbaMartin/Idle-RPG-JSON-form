@@ -158,12 +158,23 @@ select {
   color: var(--alert-active);
 }
 
+#character-form > button {
+  width: min(42em, 100%);
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
 .preview-section {
   margin-top: 2rem;
+  max-width: 42rem;
+  width: 100%;
+  margin-inline: auto;
 }
 
 #json-preview {
   min-height: 8rem;
+  width: 100%;
+  max-width: 42rem;
   overflow: auto;
   border: 1px solid var(--primary);
   border-radius: 0.25rem;
