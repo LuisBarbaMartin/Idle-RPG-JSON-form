@@ -50,6 +50,7 @@ function createInitialStats() {
   return { ...minimumStats };
 }
 
+// potential to improve here.
 function createCharacterId(name, job) {
   const jobPart = job || "character";
   const namePart = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
@@ -66,6 +67,8 @@ function App() {
   const [traitSelectValue, setTraitSelectValue] = useState("");
   const [selectedTraits, setSelectedTraits] = useState([]);
   const [generatedJson, setGeneratedJson] = useState("");
+  const [uploadedJson, setUploadedJson] = useState(null);
+  const [uploadError, setUploadError] = useState("");
 
   const selectedTraitValues = useMemo(function () {
     return selectedTraits.map(function (trait) {
@@ -103,6 +106,26 @@ function App() {
     });
   }
 
+  function increaseStatByFive(statName) {
+    if (availableStatPoints <= 0) {
+      return;
+    }
+
+    const pointsToSpend = Math.min(5, availableStatPoints);
+
+    setStats(function (currentStats) {
+      return {
+        ...currentStats,
+        [statName]: currentStats[statName] + pointsToSpend
+      };
+    });
+
+    setAvailableStatPoints(function (currentPoints) {
+      return currentPoints - pointsToSpend;
+    });
+  }
+
+
   function decreaseStat(statName) {
     if (stats[statName] <= minimumStats[statName]) {
       return;
@@ -116,6 +139,25 @@ function App() {
     });
     setAvailableStatPoints(function (currentPoints) {
       return currentPoints + 1;
+    });
+  }
+
+  function decreaseStatByFive(statName) {
+    if (stats[statName] <= minimumStats[statName]) {
+      return;
+    }
+
+    const pointsToRefund = Math.min(5, stats[statName] - minimumStats[statName]);
+
+    setStats(function (currentStats) {
+      return {
+        ...currentStats,
+        [statName]: currentStats[statName] - pointsToRefund
+      };
+    });
+
+    setAvailableStatPoints(function (currentPoints) {
+      return currentPoints + pointsToRefund;
     });
   }
 
@@ -169,9 +211,19 @@ function App() {
     return JSON.stringify(character, null, 2);
   }
 
+  function buildMergedCharacterJson() {
+    const newCharacterJson = JSON.parse(buildCharacterJson());
+    const mergedJson = {
+      ...(uploadedJson || {}),
+      ...newCharacterJson
+    };
+
+    return JSON.stringify(mergedJson, null, 2);
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
-    setGeneratedJson(buildCharacterJson());
+    setGeneratedJson(uploadedJson ? buildMergedCharacterJson() : buildCharacterJson());
   }
 
   function downloadJson() {
@@ -186,11 +238,47 @@ function App() {
     URL.revokeObjectURL(url);
   }
 
+  function handleJsonUpload(event) {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      try {
+        const parsedJson = JSON.parse(reader.result);
+
+        setUploadedJson(parsedJson);
+        setUploadError("");
+      } catch {
+        setUploadedJson(null);
+        setUploadError("That file is not valid JSON.");
+      }
+    };
+
+    reader.readAsText(file);
+  }
+
+
   return (
     <main className="app-shell">
       <h1>Character JSON Builder</h1>
-
       <form id="character-form" onSubmit={handleSubmit}>
+        <div className="form-field">
+          <label htmlFor="json-upload">Upload JSON:</label>
+          <input
+            id="json-upload"
+            type="file"
+            accept=".json,application/json"
+            onChange={handleJsonUpload}
+          />
+        </div>
+        {uploadedJson && <p className="form-note">JSON loaded. Generated characters will be appended to it.</p>}
+        {uploadError && <p className="form-error">{uploadError}</p>}
+
         <div className="form-field">
           <label htmlFor="character-name">Character Name:</label>
           <input
@@ -255,10 +343,18 @@ function App() {
 
                 <div className="stat-buttons">
                   <button type="button" onClick={function () {
+                    decreaseStatByFive(statName);
+                  }}>
+                    -5
+                  </button>
+                  
+                  <button type="button" onClick={function () {
                     decreaseStat(statName);
                   }}>
                     -
                   </button>
+                  
+
                   <input
                     id={`character-${statName}`}
                     name={statName}
@@ -266,10 +362,17 @@ function App() {
                     value={stats[statName]}
                     readOnly
                   />
+
                   <button type="button" onClick={function () {
                     increaseStat(statName);
                   }}>
                     +
+                  </button>
+
+                  <button type="button" onClick={function () {
+                    increaseStatByFive(statName);
+                  }}>
+                    +5
                   </button>
                 </div>
               </div>
