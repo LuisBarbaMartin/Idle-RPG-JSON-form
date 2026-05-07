@@ -1,0 +1,81 @@
+{
+  "mage_0001": {
+    "name": "The Guide",
+    "job": "Mage",
+    "base_strength": 5,
+    "base_intelligence": 5,
+    "base_agility": 5,
+    "base_wisdom": 5,
+    "level": 1
+  },
+
+  "mage_0002": {
+    "name": "Adrie",
+    "job": "Mage",
+    "base_strength": 4,
+    "base_intelligence": 13,
+    "base_agility": 18,
+    "base_wisdom": 5,
+    "level": 1
+  },
+
+  "fighter_0001": {
+    "name": "Rei",
+    "job": "Fighter",
+    "base_strength": 12,
+    "base_intelligence": 3,
+    "base_agility": 6,
+    "base_wisdom": 4,
+    "level": 1
+  },
+
+  "paladin_0001": {
+    "name": "CovaDax",
+    "job": "Paladin",
+    "base_strength": 10,
+    "base_intelligence": 4,
+    "base_agility": 4,
+    "base_wisdom": 11,
+    "level": 1
+  },
+
+  "theif_0001": {
+    "name": "Yaiga",
+    "job": "Thief",
+    "base_strength": 6,
+    "base_intelligence": 5,
+    "base_agility": 12,
+    "base_wisdom": 4,
+    "level": 1
+  },
+
+  "cleric_0001": {
+    "name": "Woogie Copperpot",
+    "job": "Cleric",
+    "base_strength": 6,
+    "base_intelligence": 7,
+    "base_agility": 4,
+    "base_wisdom": 13,
+    "level": 1
+  },
+
+  "ranger_0001": {
+    "name": "Bootsie Lacetight",
+    "job": "Ranger",
+    "base_strength": 8,
+    "base_intelligence": 5,
+    "base_agility": 12,
+    "base_wisdom": 7,
+    "level": 1
+  },
+
+  "wizard_0001": {
+    "name": "Biggie Natch",
+    "job": "Wizard",
+    "base_strength": 3,
+    "base_intelligence": 15,
+    "base_agility": 4,
+    "base_wisdom": 8,
+    "level": 1
+  }
+}

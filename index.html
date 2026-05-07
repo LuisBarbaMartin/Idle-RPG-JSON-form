@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JSON Builder</title>
+</head>
+<body>
+  <h1>Character JSON Builder</h1>
+
+  <form id="character-form">
+    <label>
+      Character Name:
+      <input type="text" id="name" required>
+    </label>
+
+    <br><br>
+
+    <label>
+      Class:
+      <input type="text" id="job" required>
+    </label>
+
+    <br><br>
+
+    <label>
+      Level:
+      <input type="number" id="level" min="1" value="1">
+    </label>
+
+    <br><br>
+
+    <label>
+      Strength:
+      <input type="number" id="strength" min="0" value="5">
+    </label>
+
+    <br><br>
+
+    <label>
+      Intelligence:
+      <input type="number" id="intelligence" min="0" value="5">
+    </label>
+
+    <br><br>
+
+    <button type="submit">Generate JSON</button>
+  </form>
+
+  <h2>Preview</h2>
+  <pre id="json-preview"></pre>
+
+  <button id="download-btn" disabled>Download JSON</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

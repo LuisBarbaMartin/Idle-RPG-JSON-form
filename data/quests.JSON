@@ -1,0 +1,57 @@
+{
+  "quest_0001_locked_cellar": {
+    "name": "The Locked Cellar",
+    "time_to_complete_seconds": 10,
+    "checks": [
+      {
+        "description": "Break open the swollen cellar door.",
+        "stat": "strength",
+        "difficulty": 15,
+        "success_text": "The door cracks open under the blow.",
+        "failure_text": "The door holds firm."
+      },
+      {
+        "description": "Keep steady in the dark below.",
+        "stat": "wisdom",
+        "difficulty": 8,
+        "success_text": "The shadows feel less threatening.",
+        "failure_text": "Panic turns every sound into a threat."
+      }
+    ],
+    "rewards": {
+      "gold": 100,
+      "items": [
+        "item_0001_iron_sword"
+      ],
+      "experience": 20
+    }
+  },
+
+  "quest0002_cat_in_a_tree": {
+    "name": "Cat in a Tree",
+    "time_to_complete_seconds": 15,
+    "checks": [
+      {
+        "description": "Climb the tree to reach the cat.",
+        "stat": "agility",
+        "difficulty": 10,
+        "success_text": "You skillfully climb the tree and reach the cat, but they climb further...",
+        "failure_text": "You slip and fall, failing to reach the cat."
+      },
+      {
+        "description": "Cat cat goes further up the tree...",
+        "stat": "agility",
+        "difficulty": 13,
+        "success_text": "You skillfully climb the tree and reach the cat.",
+        "failure_text": "You slip and fall, failing to reach the cat."
+      }
+
+    ],
+    "rewards": {
+      "gold": 20,
+      
+      "experience": 30
+    }
+  }
+
+}
