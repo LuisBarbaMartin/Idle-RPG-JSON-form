@@ -53,6 +53,20 @@ button:disabled {
   min-width: 8rem;
 }
 
+.form-note,
+.form-error {
+  margin: -0.5rem 0 0;
+  font-size: 0.9rem;
+}
+
+.form-note {
+  color: #365f28;
+}
+
+.form-error {
+  color: #8b0000;
+}
+
 input,
 select {
   min-height: 2rem;
