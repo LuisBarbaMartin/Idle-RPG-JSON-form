@@ -22,12 +22,29 @@ const traits = [
 
 const statNames = ["strength", "intelligence", "agility", "wisdom"];
 
-const minimumStats = {
+const jobMinimums = {
+  fighter: { strength: 5, intelligence: 3, agility: 4, wisdom: 3 },
+  paladin: { strength: 4, intelligence: 3, agility: 3, wisdom: 5 },
+  mage: { strength: 3, intelligence: 5, agility: 3, wisdom: 4 },
+  wizard: { strength: 3, intelligence: 4, agility: 3, wisdom: 5 },
+  cleric: { strength: 3, intelligence: 4, agility: 3, wisdom: 5 },
+  ranger: { strength: 3, intelligence: 3, agility: 5, wisdom: 4 },
+  thief: { strength: 3, intelligence: 4, agility: 5, wisdom: 3 }
+};
+
+const baseMinimumStats = {
   strength: 3,
   intelligence: 3,
   agility: 3,
   wisdom: 3
 };
+
+function getMinimumStats(job) {
+  return {
+    ...baseMinimumStats,
+    ...(jobMinimums[job] || {})
+  };
+}
 
 function getPointsPerLevel(level) {
   const basePoints = 3;
@@ -46,8 +63,8 @@ function calculateStatPool(level) {
   return totalPoints;
 }
 
-function createInitialStats() {
-  return { ...minimumStats };
+function createInitialStats(job) {
+  return { ...getMinimumStats(job)};
 }
 
 // potential to improve here.
@@ -86,7 +103,7 @@ function App() {
       return;
     }
 
-    setStats(createInitialStats());
+    setStats(createInitialStats(job));
     setAvailableStatPoints(calculateStatPool(nextLevel));
   }
 
@@ -127,7 +144,7 @@ function App() {
 
 
   function decreaseStat(statName) {
-    if (stats[statName] <= minimumStats[statName]) {
+    if (stats[statName] <= getMinimumStats(job)[statName]) {
       return;
     }
 
@@ -143,11 +160,11 @@ function App() {
   }
 
   function decreaseStatByFive(statName) {
-    if (stats[statName] <= minimumStats[statName]) {
+    if (stats[statName] <= getMinimumStats(job)[statName]) {
       return;
     }
 
-    const pointsToRefund = Math.min(5, stats[statName] - minimumStats[statName]);
+    const pointsToRefund = Math.min(5, stats[statName] - getMinimumStats(job)[statName]);
 
     setStats(function (currentStats) {
       return {
@@ -300,7 +317,9 @@ function App() {
             name="job"
             value={job}
             onChange={function (event) {
-              setJob(event.target.value);
+              const nextJob = event.target.value;
+              setJob(nextJob);
+              setStats(createInitialStats(nextJob));
             }}
             required
           >
