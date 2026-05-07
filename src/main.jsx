@@ -1,6 +1,6 @@
 import { StrictMode, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import "../style.css";
+import "./main.css";
 
 const jobs = [
   { value: "fighter", label: "Fighter" },
@@ -9,7 +9,7 @@ const jobs = [
   { value: "wizard", label: "Wizard" },
   { value: "cleric", label: "Cleric" },
   { value: "ranger", label: "Ranger" },
-  { value: "thief", label: "Thief" }
+  { value: "thief", label: "Thief" },
 ];
 
 const traits = [
@@ -17,7 +17,7 @@ const traits = [
   { value: "clever", label: "Clever" },
   { value: "reckless", label: "Reckless" },
   { value: "loyal", label: "Loyal" },
-  { value: "greedy", label: "Greedy" }
+  { value: "greedy", label: "Greedy" },
 ];
 
 const statNames = ["strength", "intelligence", "agility", "wisdom"];
@@ -36,7 +36,7 @@ const baseMinimumStats = {
   strength: 3,
   intelligence: 3,
   agility: 3,
-  wisdom: 3
+  wisdom: 3,
 };
 
 function getMinimumStats(job) {
@@ -68,9 +68,14 @@ function createInitialStats(job) {
 }
 
 // potential to improve here.
+// potential to improve here.
 function createCharacterId(name, job) {
   const jobPart = job || "character";
-  const namePart = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  const namePart = name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "");
 
   return namePart ? `${jobPart}_${namePart}` : jobPart;
 }
@@ -86,12 +91,17 @@ function App() {
   const [generatedJson, setGeneratedJson] = useState("");
   const [uploadedJson, setUploadedJson] = useState(null);
   const [uploadError, setUploadError] = useState("");
+  const [uploadedJson, setUploadedJson] = useState(null);
+  const [uploadError, setUploadError] = useState("");
 
-  const selectedTraitValues = useMemo(function () {
-    return selectedTraits.map(function (trait) {
-      return trait.value;
-    });
-  }, [selectedTraits]);
+  const selectedTraitValues = useMemo(
+    function () {
+      return selectedTraits.map(function (trait) {
+        return trait.value;
+      });
+    },
+    [selectedTraits],
+  );
 
   function handleLevelChange(event) {
     const nextLevel = Number(event.target.value);
@@ -115,13 +125,33 @@ function App() {
     setStats(function (currentStats) {
       return {
         ...currentStats,
-        [statName]: currentStats[statName] + 1
+        [statName]: currentStats[statName] + 1,
       };
     });
     setAvailableStatPoints(function (currentPoints) {
       return currentPoints - 1;
     });
   }
+
+  function increaseStatByFive(statName) {
+    if (availableStatPoints <= 0) {
+      return;
+    }
+
+    const pointsToSpend = Math.min(5, availableStatPoints);
+
+    setStats(function (currentStats) {
+      return {
+        ...currentStats,
+        [statName]: currentStats[statName] + pointsToSpend
+      };
+    });
+
+    setAvailableStatPoints(function (currentPoints) {
+      return currentPoints - pointsToSpend;
+    });
+  }
+
 
   function increaseStatByFive(statName) {
     if (availableStatPoints <= 0) {
@@ -151,7 +181,7 @@ function App() {
     setStats(function (currentStats) {
       return {
         ...currentStats,
-        [statName]: currentStats[statName] - 1
+        [statName]: currentStats[statName] - 1,
       };
     });
     setAvailableStatPoints(function (currentPoints) {
@@ -187,9 +217,11 @@ function App() {
       return;
     }
 
-    if (selectedTraits.some(function (trait) {
-      return trait.value === traitToAdd.value;
-    })) {
+    if (
+      selectedTraits.some(function (trait) {
+        return trait.value === traitToAdd.value;
+      })
+    ) {
       return;
     }
 
@@ -221,8 +253,8 @@ function App() {
         base_agility: stats.agility,
         base_wisdom: stats.wisdom,
         level: Number(level),
-        traits: selectedTraitValues
-      }
+        traits: selectedTraitValues,
+      },
     };
 
     return JSON.stringify(character, null, 2);
@@ -238,8 +270,19 @@ function App() {
     return JSON.stringify(mergedJson, null, 2);
   }
 
+  function buildMergedCharacterJson() {
+    const newCharacterJson = JSON.parse(buildCharacterJson());
+    const mergedJson = {
+      ...(uploadedJson || {}),
+      ...newCharacterJson
+    };
+
+    return JSON.stringify(mergedJson, null, 2);
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
+    setGeneratedJson(uploadedJson ? buildMergedCharacterJson() : buildCharacterJson());
     setGeneratedJson(uploadedJson ? buildMergedCharacterJson() : buildCharacterJson());
   }
 
@@ -254,6 +297,31 @@ function App() {
 
     URL.revokeObjectURL(url);
   }
+
+  function handleJsonUpload(event) {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      try {
+        const parsedJson = JSON.parse(reader.result);
+
+        setUploadedJson(parsedJson);
+        setUploadError("");
+      } catch {
+        setUploadedJson(null);
+        setUploadError("That file is not valid JSON.");
+      }
+    };
+
+    reader.readAsText(file);
+  }
+
 
   function handleJsonUpload(event) {
     const file = event.target.files[0];
@@ -297,6 +365,18 @@ function App() {
         {uploadError && <p className="form-error">{uploadError}</p>}
 
         <div className="form-field">
+          <label htmlFor="json-upload">Upload JSON:</label>
+          <input
+            id="json-upload"
+            type="file"
+            accept=".json,application/json"
+            onChange={handleJsonUpload}
+          />
+        </div>
+        {uploadedJson && <p className="form-note">JSON loaded. Generated characters will be appended to it.</p>}
+        {uploadError && <p className="form-error">{uploadError}</p>}
+
+        <div className="form-field">
           <label htmlFor="character-name">Character Name:</label>
           <input
             id="character-name"
@@ -321,8 +401,7 @@ function App() {
               setJob(nextJob);
               setStats(createInitialStats(nextJob));
             }}
-            required
-          >
+            required>
             <option value="">Select a job</option>
             {jobs.map(function (jobOption) {
               return (
@@ -336,16 +415,7 @@ function App() {
 
         <div className="level-row">
           <label htmlFor="character-level">Level:</label>
-          <input
-            id="character-level"
-            name="level"
-            type="number"
-            min="1"
-            max="100"
-            value={level}
-            onChange={handleLevelChange}
-            required
-          />
+          <input id="character-level" name="level" type="number" min="1" max="100" value={level} onChange={handleLevelChange} required />
 
           <p>
             Available Stat Points: <strong>{availableStatPoints}</strong>
@@ -356,9 +426,7 @@ function App() {
           {statNames.map(function (statName) {
             return (
               <div className="stat-control" key={statName}>
-                <label htmlFor={`character-${statName}`}>
-                  {statName.charAt(0).toUpperCase() + statName.slice(1)}
-                </label>
+                <label htmlFor={`character-${statName}`}>{statName.charAt(0).toUpperCase() + statName.slice(1)}</label>
 
                 <div className="stat-buttons">
                   <button type="button" onClick={function () {
@@ -368,8 +436,16 @@ function App() {
                   </button>
                   
                   <button type="button" onClick={function () {
-                    decreaseStat(statName);
+                    decreaseStatByFive(statName);
                   }}>
+                    -5
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={function () {
+                      decreaseStat(statName);
+                    }}>
                     -
                   </button>
                   
@@ -393,6 +469,12 @@ function App() {
                   }}>
                     +5
                   </button>
+
+                  <button type="button" onClick={function () {
+                    increaseStatByFive(statName);
+                  }}>
+                    +5
+                  </button>
                 </div>
               </div>
             );
@@ -407,8 +489,7 @@ function App() {
             value={traitSelectValue}
             onChange={function (event) {
               setTraitSelectValue(event.target.value);
-            }}
-          >
+            }}>
             <option value="">Choose a trait</option>
             {traits.map(function (trait) {
               return (
@@ -419,7 +500,9 @@ function App() {
             })}
           </select>
 
-          <button type="button" onClick={addTrait}>Add Trait</button>
+          <button type="button" onClick={addTrait}>
+            Add Trait
+          </button>
         </div>
 
         <div id="selected-traits-container">
@@ -433,8 +516,7 @@ function App() {
                   onClick={function () {
                     removeTrait(trait.value);
                   }}
-                  aria-label={`Remove ${trait.label}`}
-                >
+                  aria-label={`Remove ${trait.label}`}>
                   x
                 </button>
               </span>
@@ -460,5 +542,5 @@ function App() {
 createRoot(document.querySelector("#root")).render(
   <StrictMode>
     <App />
-  </StrictMode>
+  </StrictMode>,
 );
